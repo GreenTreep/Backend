@@ -8,12 +8,38 @@
 plugins {
 // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'jacoco'
+    id "org.sonarqube" version "5.1.0.4882"
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "GreenTreep_Backend"
+    property "sonar.organization", "greentreep"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
 
 repositories {
 // Use Maven Central for resolving dependencies.
 mavenCentral()
 }
+
+test {
+    finalizedBy jacocoTestReport
+}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.3.3'
