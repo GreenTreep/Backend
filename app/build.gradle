@@ -15,7 +15,6 @@ plugins {
     id 'org.asciidoctor.jvm.pdf' version '4.0.2'
 }
 
-
 asciidoctor {
     sourceDir = file('src/docs/asciidoc')
     outputDir = file("${buildDir}/docs/asciidoc")
