@@ -1,5 +1,5 @@
 # Backend Projet DevOps MIAGE
-
+[![Build & test](https://github.com/GreenTreep/Backend/actions/workflows/gradle-build.yml/badge.svg?branch=main)](https://github.com/GreenTreep/Backend/actions/workflows/gradle-build.yml)
 ## Prérequis
 - Java 21
 
