@@ -4,6 +4,16 @@ spring:
   web:
     resources:
       add-mappings: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-docker:3306/greentrip
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
 springdoc:
   api-docs:
     path: /api-docs
