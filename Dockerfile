@@ -6,3 +6,4 @@ ADD app/build/libs/app-0.0.1.jar app.jar
 
 # Commande pour lancer le JAR
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
