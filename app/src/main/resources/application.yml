@@ -4,6 +4,22 @@ spring:
   web:
     resources:
       add-mappings: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-docker:3306/greentrip
+    username: root
+    password: root
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
 springdoc:
   api-docs:
     path: /api-docs
