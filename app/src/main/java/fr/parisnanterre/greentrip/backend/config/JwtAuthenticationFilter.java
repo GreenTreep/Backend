@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("Authentication successful for user: " + userEmail); // Debug log
+                System.out.println("Authentication successful for user: " + userEmail);  // Debug log
             } else {
                 System.out.println("JWT is invalid for user: " + userEmail); // Debug log
             }
