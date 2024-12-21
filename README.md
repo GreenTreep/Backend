@@ -3,8 +3,9 @@
 [![Build & Test](https://github.com/GreenTreep/Backend/actions/workflows/gradle-build.yml/badge.svg?branch=main)](https://github.com/GreenTreep/Backend/actions/workflows/gradle-build.yml)
 [![Java](https://img.shields.io/badge/java-21-blue.svg)](https://www.oracle.com/java/technologies/javase-jdk21.html)
 [![Docker](https://img.shields.io/badge/docker-20.10.7-blue.svg)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache-yellow.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/GreenTreep/Backend.svg?style=social&label=Stars)](https://github.com/GreenTreep/Backend/stargazers)
+[![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=GreenTreep_Backend&metric=alert_status)](https://sonarcloud.io/dashboard?id=GreenTreep_Backend)
 
 ## Table des Matières
 - [Introduction](#introduction)
