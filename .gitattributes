@@ -10,3 +10,17 @@
 # Binary files should be left untouched
 *.jar           binary
 
+# Exclude files from being counted by linguist
+*.css           linguist-vendored
+*.scss          linguist-vendored
+*.html          linguist-vendored
+*.js            linguist-vendored
+
+# Include Java files in the language statistics
+*.java          linguist-vendored=false
+
+# Ensure Dockerfile, YAML, and Gradle files are included
+Dockerfile      linguist-vendored=false
+*.yml           linguist-vendored=false
+*.yaml          linguist-vendored=false
+*.gradle        linguist-vendored=false
