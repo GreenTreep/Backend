@@ -48,26 +48,28 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");
+
         if (refreshToken == null || refreshToken.isEmpty()) {
-            return ResponseEntity.badRequest().body("Refresh token is required");
+            return ResponseEntity.badRequest().body(Map.of("error", "Refresh token is required"));
         }
 
         try {
             String username = jwtService.extractUserName(refreshToken);
+
             if (username == null || !jwtService.isTokenValid(refreshToken, userDetailsService.loadUserByUsername(username))) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid refresh token"));
             }
 
-            // Generate a new access token
+            // Générer un nouveau access token
             String newAccessToken = jwtService.generateToken(userDetailsService.loadUserByUsername(username));
             return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
-        } catch (ExpiredJwtException ex) {
-            // Handle refresh token expiry separately if needed
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token has expired. Please log in again.");
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Refresh token expired"));
         }
     }
+
 
 
     @PostMapping("/logout")

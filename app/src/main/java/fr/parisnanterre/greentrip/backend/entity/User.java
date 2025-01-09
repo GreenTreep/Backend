@@ -20,7 +20,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
 
@@ -30,6 +30,15 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public User(Long id, String firstName, String lastName, String email, String password, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
@@ -41,11 +50,11 @@ public class User implements UserDetails {
 
     public User(){}
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
