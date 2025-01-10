@@ -33,6 +33,20 @@ jobs:
       run: ./gradlew build
       working-directory: .
 
+    - name: Clean Remote Target (If Necessary)
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: 157.245.41.10
+        username: ci-user
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          if [ -f "/opt/greentrip/backend/app.jar" ]; then
+            rm /opt/greentrip/backend/app.jar
+          fi
+          if [ -d "/opt/greentrip/backend/app.jar" ]; then
+            rm -rf /opt/greentrip/backend/app.jar
+          fi
+
     - name: Deploy Backend to Server
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -40,9 +54,7 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         source: app/build/libs/app-0.0.1.jar
-        target: /opt/greentrip/backend/app.jar
-        rm: true
-
+        target: /opt/greentrip/backend/
 
     - name: Restart Backend Container
       uses: appleboy/ssh-action@v0.1.7
