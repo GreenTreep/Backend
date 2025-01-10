@@ -40,7 +40,7 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          # Supprimer le répertoire app s'il existe
+          # Remove the old /opt/greentrip/backend/app folder if it exists
           sudo rm -rf /opt/greentrip/backend/app
 
     - name: Create Remote Directories
@@ -50,7 +50,7 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          # Créer les répertoires nécessaires
+          # Recreate the needed folder structure
           sudo mkdir -p /opt/greentrip/backend/app/build/libs
 
     - name: Deploy Backend to Server
@@ -59,9 +59,10 @@ jobs:
         host: 157.245.41.10
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
+        # Copy your local JAR file to the same path on the server
         source: app/build/libs/app-0.0.1.jar
         target: /opt/greentrip/backend/app/build/libs/
-        tar: false  # Désactiver l'archivage tar
+        # NOTE: Remove "tar: false" because it's not supported in v0.1.7
 
     - name: Restart Backend Container
       uses: appleboy/ssh-action@v0.1.7
