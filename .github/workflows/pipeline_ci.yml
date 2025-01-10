@@ -64,4 +64,4 @@ jobs:
             cd /opt/greentrip/backend
             docker-compose down
             docker-compose up -d --build
-            docker update --restart unless-stopped greentrip
+            sudo docker update --restart unless-stopped greentrip
