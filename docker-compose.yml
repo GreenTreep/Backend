@@ -12,6 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   greentrip:
     build:
@@ -28,18 +30,17 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
 
-  metabase:
-    image: metabase/metabase
-    container_name: metabase
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
     ports:
-      - "3000:3000"
+      - "8081:80"
     environment:
-      MB_DB_TYPE: mysql
-      MB_DB_DBNAME: greentrip
-      MB_DB_HOST: mysql-docker
-      MB_DB_PORT: 3306
-      MB_DB_USER: root
-      MB_DB_PASS: root
+      PMA_HOST: mysql-docker
+      MYSQL_ROOT_PASSWORD: root
     depends_on:
       mysql:
         condition: service_healthy
+
+volumes:
+  mysql_data:
