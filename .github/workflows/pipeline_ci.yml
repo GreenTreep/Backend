@@ -40,12 +40,10 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          if [ -f "/opt/greentrip/backend/app.jar" ]; then
-            rm /opt/greentrip/backend/app.jar
+          if [ -d "/opt/greentrip/backend/app" ]; then
+            rm -rf /opt/greentrip/backend/app
           fi
-          if [ -d "/opt/greentrip/backend/app.jar" ]; then
-            rm -rf /opt/greentrip/backend/app.jar
-          fi
+
 
     - name: Deploy Backend to Server
       uses: appleboy/scp-action@v0.1.7
