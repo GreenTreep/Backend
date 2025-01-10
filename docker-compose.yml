@@ -12,6 +12,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   greentrip:
     build:
@@ -27,3 +29,18 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-docker:3306/greentrip
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql-docker
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
