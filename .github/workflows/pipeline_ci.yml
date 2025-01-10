@@ -51,7 +51,7 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           # Créer les répertoires nécessaires
-          mkdir -p /opt/greentrip/backend/app/build/libs
+          sudo mkdir -p /opt/greentrip/backend/app/build/libs
 
     - name: Deploy Backend to Server
       uses: appleboy/scp-action@v0.1.7
