@@ -40,8 +40,18 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
+          # Supprimer le répertoire app s'il existe
           sudo rm -rf /opt/greentrip/backend/app
 
+    - name: Create Remote Directories
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: 157.245.41.10
+        username: ci-user
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          # Créer les répertoires nécessaires
+          mkdir -p /opt/greentrip/backend/app/build/libs
 
     - name: Deploy Backend to Server
       uses: appleboy/scp-action@v0.1.7
@@ -50,7 +60,8 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         source: app/build/libs/app-0.0.1.jar
-        target: /opt/greentrip/backend/
+        target: /opt/greentrip/backend/app/build/libs/
+        tar: false  # Désactiver l'archivage tar
 
     - name: Restart Backend Container
       uses: appleboy/ssh-action@v0.1.7
