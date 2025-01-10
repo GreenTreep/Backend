@@ -27,3 +27,19 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-docker:3306/greentrip
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
+  metabase:
+    image: metabase/metabase
+    container_name: metabase
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: mysql
+      MB_DB_DBNAME: greentrip
+      MB_DB_HOST: mysql-docker
+      MB_DB_PORT: 3306
+      MB_DB_USER: root
+      MB_DB_PASS: root
+    depends_on:
+      mysql:
+        condition: service_healthy
