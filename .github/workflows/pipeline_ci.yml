@@ -41,6 +41,8 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         source: app/build/libs/app-0.0.1.jar
         target: /opt/greentrip/backend/app.jar
+        rm: true
+
 
     - name: Restart Backend Container
       uses: appleboy/ssh-action@v0.1.7
