@@ -13,7 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -30,7 +29,6 @@ jobs:
 
       - name: Build Backend
         run: ./gradlew build
-        working-directory: .
 
       - name: Fix Permissions
         uses: appleboy/ssh-action@v0.1.7
@@ -39,9 +37,6 @@ jobs:
           username: ci-user
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            # OPTIONAL: remove old JAR or old folder
-            # sudo rm -rf /opt/greentrip/backend/app
-            # Now fix ownership so scp-action can create subfolders
             sudo chown -R ci-user:ci-user /opt/greentrip/backend
             sudo chmod -R 775 /opt/greentrip/backend
 
@@ -62,6 +57,6 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             cd /opt/greentrip/backend
-            docker-compose down
-            docker-compose up -d --build
+            sudo docker-compose down
+            sudo docker-compose up -d --build
             sudo docker update --restart unless-stopped greentrip
