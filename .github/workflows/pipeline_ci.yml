@@ -40,9 +40,8 @@ jobs:
         username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          if [ -d "/opt/greentrip/backend/app" ]; then
-            rm -rf /opt/greentrip/backend/app
-          fi
+          sudo chown -R ci-user:ci-user /opt/greentrip/backend/app
+          rm -rf /opt/greentrip/backend/app
 
 
     - name: Deploy Backend to Server
