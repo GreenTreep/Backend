@@ -31,29 +31,22 @@ jobs:
 
     - name: Build Backend
       run: ./gradlew build
-      working-directory: backend
-
-    - name: Validate JAR File
-      run: |
-        if [ ! -f backend/app/build/libs/app-0.0.1.jar ]; then
-          echo "Error: JAR file not found!"
-          exit 1
-        fi
+      working-directory: .
 
     - name: Deploy Backend to Server
       uses: appleboy/scp-action@v0.1.7
       with:
         host: 157.245.41.10
-        username: root
+        username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
-        source: backend/app/build/libs/app-0.0.1.jar
+        source: app/build/libs/app-0.0.1.jar
         target: /opt/greentrip/backend/app.jar
 
     - name: Restart Backend Container
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: 157.245.41.10
-        username: root
+        username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           cd /opt/greentrip/backend
