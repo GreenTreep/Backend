@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build-and-deploy:
@@ -40,7 +37,7 @@ jobs:
       uses: appleboy/scp-action@v0.1.7
       with:
         host: 157.245.41.10
-        username: root
+        username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         source: app/build/libs/app-0.0.1.jar
         target: /opt/greentrip/backend/app.jar
@@ -49,7 +46,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: 157.245.41.10
-        username: root
+        username: ci-user
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           cd /opt/greentrip/backend
