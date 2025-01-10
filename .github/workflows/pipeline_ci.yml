@@ -10,68 +10,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        lfs: true
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        java-version: '21'
-        distribution: 'temurin'
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-    - name: Build Backend
-      run: ./gradlew build
-      working-directory: .
+      - name: Build Backend
+        run: ./gradlew build
+        working-directory: .
 
-    - name: Clean Remote Target (If Necessary)
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: 157.245.41.10
-        username: ci-user
-        password: ${{ secrets.SERVER_PASSWORD }}
-        script: |
-          # Remove the old /opt/greentrip/backend/app folder if it exists
-          sudo rm -rf /opt/greentrip/backend/app
+      - name: Clean Remote Target (If Necessary)
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            # Remove any existing /opt/greentrip/backend/app folder
+            sudo rm -rf /opt/greentrip/backend/app
 
-    - name: Create Remote Directories
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: 157.245.41.10
-        username: ci-user
-        password: ${{ secrets.SERVER_PASSWORD }}
-        script: |
-          # Recreate the needed folder structure
-          sudo mkdir -p /opt/greentrip/backend/app/build/libs
+      - name: Deploy Backend to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: app/build/libs/app-0.0.1.jar
+          target: /opt/greentrip/backend/
 
-    - name: Deploy Backend to Server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: 157.245.41.10
-        username: ci-user
-        password: ${{ secrets.SERVER_PASSWORD }}
-        # Copy your local JAR file to the same path on the server
-        source: app/build/libs/app-0.0.1.jar
-        target: /opt/greentrip/backend/app/build/libs/
-        # NOTE: Remove "tar: false" because it's not supported in v0.1.7
-
-    - name: Restart Backend Container
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: 157.245.41.10
-        username: ci-user
-        password: ${{ secrets.SERVER_PASSWORD }}
-        script: |
-          cd /opt/greentrip/backend
-          docker-compose down
-          docker-compose up -d --build
-          docker update --restart unless-stopped greentrip
+      - name: Restart Backend Container
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd /opt/greentrip/backend
+            docker-compose down
+            docker-compose up -d --build
+            docker update --restart unless-stopped greentrip
