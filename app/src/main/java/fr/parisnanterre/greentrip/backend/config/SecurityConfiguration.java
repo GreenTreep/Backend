@@ -1,7 +1,6 @@
 package fr.parisnanterre.greentrip.backend.config;
 
 import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,20 +26,22 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Désactiver CSRF
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configurer CORS
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll() // Routes publiques
-                .requestMatchers("/api/v1/messages/**").permitAll()
-                .requestMatchers("/api/v1/support/**").hasAuthority("ADMIN") // Accès réservé à ADMIN
-                .requestMatchers("/api/v1/user/me", "/api/v1/auth/logout").authenticated() // Utilisateur authentifié
-                .anyRequest().authenticated() // Toute autre requête doit être authentifiée
+            .requestMatchers("/", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api-docs/swagger-config", "/api-docs").permitAll() // On permet l'accès à "/"
+            .requestMatchers("/api/v1/auth/**").permitAll()
+            .requestMatchers("/api/v1/messages/**").permitAll()
+            .requestMatchers("/api/v1/support/**").hasAuthority("ADMIN")
+            .requestMatchers("/api/v1/user/me", "/api/v1/auth/logout").authenticated()
+            .anyRequest().authenticated()
             )
+
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT : pas de session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .authenticationProvider(authenticationProvider) // Fournisseur d'authentification
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Filtre JWT
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -49,9 +50,9 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "http://localhost:5173", // Pour le développement local
-            "https://www.greentrip.us", // Frontend déployé
-            "https://api.greentrip.us", // Backend déployé
+            "http://localhost:5173",
+            "https://www.greentrip.us",
+            "https://api.greentrip.us",
             "https://greentrip.us"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

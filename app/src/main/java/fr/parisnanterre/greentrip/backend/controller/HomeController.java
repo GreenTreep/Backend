@@ -1,12 +1,15 @@
 package fr.parisnanterre.greentrip.backend.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class HomeController {
+
     @GetMapping("/")
-    public String home() {
-        return "Welcome to GreenTrip!";
+    @PreAuthorize("authentication.principal.username == 'admin@example.com'")
+    public String swaggerRedirect() {
+        return "redirect:/swagger-ui.html";
     }
 }
