@@ -1,9 +1,12 @@
+server:
+  forward-headers-strategy: framework
+
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
   web:
     resources:
-      add-mappings: false
+      add-mappings: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql-docker:3306/greentrip
@@ -25,3 +28,4 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
