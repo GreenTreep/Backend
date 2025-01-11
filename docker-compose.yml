@@ -11,7 +11,7 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot" ]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     volumes:
       - mysql_data:/var/lib/mysql
 
