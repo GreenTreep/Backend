@@ -1,0 +1,62 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build Backend
+        run: ./gradlew build
+
+      - name: Fix Permissions
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            sudo chown -R ci-user:ci-user /opt/greentrip/backend
+            sudo chmod -R 775 /opt/greentrip/backend
+
+      - name: Deploy Backend to Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: app/build/libs/app-0.0.1.jar
+          target: /opt/greentrip/backend/
+
+      - name: Restart Backend Container
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 157.245.41.10
+          username: ci-user
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            cd /opt/greentrip/backend
+            sudo docker-compose down
+            sudo docker-compose up -d --build
+            sudo docker update --restart unless-stopped greentrip
