@@ -2,11 +2,11 @@ package fr.parisnanterre.greentrip.backend.service;
 import fr.parisnanterre.greentrip.backend.entity.FavoriteArticle;
 import fr.parisnanterre.greentrip.backend.entity.User;
 import fr.parisnanterre.greentrip.backend.repository.FavoriteArticleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 @Service
 public class FavoriteArticleService {
 
@@ -24,6 +24,7 @@ public class FavoriteArticleService {
         }
     }
 
+    @Transactional
     public void removeFavorite(User user, String url) {
         repository.deleteByUserAndUrl(user, url);
     }
