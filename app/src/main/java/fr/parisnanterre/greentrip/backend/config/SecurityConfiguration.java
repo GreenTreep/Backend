@@ -46,7 +46,8 @@ public class SecurityConfiguration {
                     "/api/v1/user/me",
                     "/api/v1/auth/logout",
                     "/api/trips/**",
-                    "/api/waypoints/**"
+                    "/api/waypoints/**",
+                    "/api/v1/news/views/export"
             ).authenticated()
             .anyRequest().authenticated()
             )
