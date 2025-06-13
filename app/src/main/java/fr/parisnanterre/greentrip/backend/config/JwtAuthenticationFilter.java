@@ -16,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import java.util.List;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -29,12 +31,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.logoutService = logoutService;
     }
 
+    private static final List<String> PUBLIC_PATHS = List.of(
+    "/api/v1/chat",
+    "/api/v1/messages"
+    );
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        // Si la requête cible un chemin public, on laisse passer sans authentifier
+        if (PUBLIC_PATHS.stream().anyMatch(path::startsWith)) {
+        filterChain.doFilter(request, response);
+        return;
+        }
+
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;

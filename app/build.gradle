@@ -68,27 +68,37 @@ test {
 }
 
 dependencies {
+
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.3'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.3.5'
+
+    // Spring Boot Starters (version 3.3.5 partout)
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.5'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.3.5'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.5'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.3.5'
+    implementation 'org.springframework.boot:spring-boot-starter:3.3.5'
+
+    // MySQL
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+
+    // Lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '3.3.5'
+
+    // Sécurité Spring Core
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.3.3'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.3'
+
     // JSON Web Token libraries
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
-    // https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv
-    implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
 
     // Use JUnit test framework.
     testImplementation libs.junit
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
 }
+
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
@@ -103,11 +113,11 @@ version = "0.0.1" // Version
 application {
     mainClass = 'fr.parisnanterre.greentrip.backend.App'
 }
-/*
+
 // Edit the build task to generate the asciidoc pdf too
 tasks.named('asciidoctor').configure {
     dependsOn tasks.named('asciidoctorPdf')
 }
 tasks.named('build').configure {
     dependsOn tasks.named('asciidoctor')
-}*/
+}
