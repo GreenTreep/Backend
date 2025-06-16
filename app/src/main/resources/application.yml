@@ -29,3 +29,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+stripe:
+  secret:
+    key: ${SECRET_STRIPE_KEY}

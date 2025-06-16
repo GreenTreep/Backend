@@ -84,9 +84,11 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     // https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv
     implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
-
+    implementation("com.stripe:stripe-java:29.2.0")
     // Use JUnit test framework.
     testImplementation libs.junit
+    testImplementation("org.mockito:mockito-core:5.17.0")
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
 }
 
