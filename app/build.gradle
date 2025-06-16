@@ -78,6 +78,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '3.3.5'
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.3.3'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.3'
+    // https://mvnrepository.com/artifact/com.stripe/stripe-java
+    implementation("com.stripe:stripe-java:29.2.0")
     // JSON Web Token libraries
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
@@ -87,6 +89,8 @@ dependencies {
 
     // Use JUnit test framework.
     testImplementation libs.junit
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation("org.mockito:mockito-core:5.17.0")
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.3'
 }
 

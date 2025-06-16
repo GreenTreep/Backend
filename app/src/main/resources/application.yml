@@ -9,7 +9,7 @@ spring:
       add-mappings: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-docker:3307/greentrip
+    url: jdbc:mysql://mysql-docker:3306/greentrip
     username: root
     password: root
     hikari:
@@ -29,3 +29,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+stripe:
+  secret:
+    key: ${SECRET_STRIPE_KEY}

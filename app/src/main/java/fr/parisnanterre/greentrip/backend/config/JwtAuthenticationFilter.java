@@ -1,6 +1,7 @@
 package fr.parisnanterre.greentrip.backend.config;
 
 import fr.parisnanterre.greentrip.backend.service.LogoutService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,6 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             System.out.println("No Authorization header or invalid format."); // Debug log
+            System.out.println("➡️ Requête vers : " + request.getRequestURI());
+            System.out.println("🔐 Authorization header : " + request.getHeader("Authorization"));
             filterChain.doFilter(request, response);
             return;
         }
@@ -53,7 +56,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         System.out.println("Extracted JWT: " + jwt); // Debug log
-        userEmail = jwtService.extractUserName(jwt);
+        try {
+            userEmail = jwtService.extractUserName(jwt);
+        } catch (ExpiredJwtException e) {
+            System.err.println("⛔ JWT expiré : " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
         System.out.println("Extracted email from JWT: " + userEmail); // Debug log
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
