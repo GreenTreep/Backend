@@ -1,8 +1,10 @@
 package fr.parisnanterre.greentrip.backend.config;
 
 import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,42 +26,53 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    System.out.println("🔐 SecurityFilterChain initialized");
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.disable())
+        .authorizeHttpRequests(auth -> auth
+            // Autoriser explicitement les requêtes POST vers /api/v1/chat
+            .requestMatchers(HttpMethod.POST, "/api/v1/chat").permitAll()
+
+            // Autorisations générales pour les autres endpoints publics
             .requestMatchers(
-                    "/",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html",
-                    "/api-docs/swagger-config",
-                    "/api-docs",
-                    "/api/v1/auth/**",
-                    "/api/v1/messages/**"
-                    ).permitAll() // On permet l'accès à "/"
+                "/",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-ui.html",
+                "/api-docs/swagger-config",
+                "/api-docs",
+                "/api/v1/auth/**",
+                "/api/v1/messages/**",
+                "/api/v1/chat/**",
+                "/chat"
+            ).permitAll()
+
+            // Restrictions pour les endpoints ADMIN
+            .requestMatchers("/api/v1/support/**").hasAuthority("ADMIN")
+
+            // Authentification requise pour ces endpoints
             .requestMatchers(
-                    "/api/v1/support/**"
-            ).hasAuthority("ADMIN")
-            .requestMatchers(
-                    "/api/v1/user/me",
-                    "/api/v1/auth/logout",
-                    "/api/trips/**",
-                    "/api/waypoints/**",
-                    "/api/v1/news/views/export"
+                "/api/v1/user/me",
+                "/api/v1/auth/logout",
+                "/api/trips/**",
+                "/api/waypoints/**",
+                "/api/v1/news/views/export"
             ).authenticated()
+
+            // Toute autre requête doit être authentifiée
             .anyRequest().authenticated()
-            )
+        )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
 
-        return http.build();
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -71,7 +84,7 @@ public class SecurityConfiguration {
             "https://greentrip.us"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "X-Requested-With"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
