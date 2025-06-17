@@ -26,54 +26,53 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("🔐 SecurityFilterChain initialized");
-        http
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.disable())
-            .authorizeHttpRequests(auth -> auth
-                // Autoriser explicitement les requêtes POST vers /api/v1/chat
-                .requestMatchers(HttpMethod.POST, "/api/v1/chat").permitAll()
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    System.out.println("🔐 SecurityFilterChain initialized");
+    http
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.disable())
+        .authorizeHttpRequests(auth -> auth
+            // Autoriser explicitement les requêtes POST vers /api/v1/chat
+            .requestMatchers(HttpMethod.POST, "/api/v1/chat").permitAll()
 
-                // Autorisations générales pour les autres endpoints publics
-                .requestMatchers(
-                    "/",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui.html",
-                    "/api-docs/swagger-config",
-                    "/api-docs",
-                    "/api/v1/auth/**",
-                    "/api/v1/messages/**",
-                    "/api/v1/chat/**",
-                    "/chat"
-                ).permitAll()
+            // Autorisations générales pour les autres endpoints publics
+            .requestMatchers(
+                "/",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-ui.html",
+                "/api-docs/swagger-config",
+                "/api-docs",
+                "/api/v1/auth/**",
+                "/api/v1/messages/**",
+                "/api/v1/chat/**",
+                "/chat"
+            ).permitAll()
 
-                // Restrictions pour les endpoints ADMIN
-                .requestMatchers("/api/v1/support/**").hasAuthority("ADMIN")
+            // Restrictions pour les endpoints ADMIN
+            .requestMatchers("/api/v1/support/**").hasAuthority("ADMIN")
 
-                // Authentification requise pour ces endpoints
-                .requestMatchers(
-                    "/api/v1/user/me",
-                    "/api/v1/auth/logout",
-                    "/api/trips/**",
-                    "/api/waypoints/**",
-                    "/api/v1/news/views/export"
+            // Authentification requise pour ces endpoints
+            .requestMatchers(
+                "/api/v1/user/me",
+                "/api/v1/auth/logout",
+                "/api/trips/**",
+                "/api/waypoints/**",
+                "/api/v1/news/views/export"
             ).authenticated()
+
+            // Toute autre requête doit être authentifiée
             .anyRequest().authenticated()
-            )
+        )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-                // Toute autre requête doit être authentifiée
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
 
-        return http.build();
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
